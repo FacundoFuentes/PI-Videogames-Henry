@@ -1,0 +1,31 @@
+.contenedor_paginacion{
+    display: inline-block;
+    background-color: var(--primaryColor);
+    margin-top: 30px;
+}
+
+.contenedor_paginacion span{
+    color: black;
+    padding: 8px 10px;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+.contenedor_paginacion span:not(.arrow) {
+    border: 1px solid var(--secondaryColor);
+}
+
+.contenedor_paginacion span:active{
+    background-color: var(--secondaryColor)!important;
+    color: var(--primaryColor);
+}
+
+.contenedor_paginacion span:hover:not(.arrow){
+    background-color: RGB(64, 25 , 53, .5);
+}
+
+.arrow:hover {
+    color: var(--secondaryColor);
+}

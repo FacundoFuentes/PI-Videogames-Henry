@@ -8,11 +8,11 @@ const { API_KEY } = process.env;
 
 router.get("/", async (req, res) => {
   const { name } = req.query;
-
   if (!name) {
     let ALL_GAMES = []; //Declaro un ARRAY vacio donde vamos a tener TODOS los juegos
 
     let DATABASE_GAMES = await Videogame.findAll({ //Busco TODOS los juegos en la BD
+      attributes: ['id', 'name', 'image', 'rating', 'platforms'],
       include: [{
         model: Genre,
         attributes: ['id', 'name'],
@@ -42,6 +42,7 @@ router.get("/", async (req, res) => {
           id: game.id,
           name: game.name,
           image: game.background_image,
+          rating: game.rating,
           genres: game.genres.map((genre) => {
             //Mapeamos también los géneros ya que no necesitamos toda la información que viene dentro
             return {
@@ -49,6 +50,11 @@ router.get("/", async (req, res) => {
               name: genre.name,
             };
           }),
+          platforms: game.platforms.map((plat => {
+            return {
+              name: plat.platform.name
+            }
+          }))
         };
       });
 
@@ -58,13 +64,14 @@ router.get("/", async (req, res) => {
     res.json(ALL_GAMES);
 
   } else {
+    console.log("Entro al else")
       let GAMES_FOUND_API, GAMES_FOUND_DB, GAMES_NEEDED //Variables que voy a necesitar para obtener los juegos
 
       GAMES_FOUND_DB = await Videogame.findAll({
         attributes: ['id', 'name', 'image', 'platforms'],
         where: {
           name: {
-            [Op.like]:  '%Carlos%'
+            [Op.like]:  `%${name}%`
           }
           
         },
@@ -77,63 +84,61 @@ router.get("/", async (req, res) => {
         }]
       })
 
-      GAMES_FOUND_DB = GAMES_FOUND_DB.map((videogame) => {
+      GAMES_FOUND_DB = GAMES_FOUND_DB.map((dbGame) => {
         return {
-          id: videogame.dataValues.id,
-          name: videogame.dataValues.name,
-          image: videogame.dataValues.image,
-          platforms: videogame.dataValues.platforms,
-          genres: videogame.dataValues.genres
+          id: dbGame.dataValues.id,
+          name: dbGame.dataValues.name,
+          image: dbGame.dataValues.image,
+          platforms: dbGame.dataValues.platforms,
+          genres: dbGame.dataValues.genres
         }
       })
-      console.log(GAMES_FOUND_DB) /////
 
       GAMES_FOUND_API = await axios.get(`https://api.rawg.io/api/games?search=${name}&key=${API_KEY}`) //Busco los juegos segun lo que me pasan por query
+      GAMES_FOUND_API = GAMES_FOUND_API.data.results.map((apiGame) => {
+        return {
+          id: apiGame.id,
+          name: apiGame.name,
+          image: apiGame.background_image,
+          platforms: apiGame.platforms.map((plat) => {
+            return{
+              name: plat.platform.name
+            }
+          }),
+          genres: apiGame.genres.map((genre) => {
+            return {
+              id: genre.id,
+              name: genre.name,
+            }
+          }),
+        }
+      })
       
-      if (!GAMES_FOUND_API.data.results.length) { //Si el "results" (que son los juegos encontrados) está vacio, devuelvo un 404 seguido de un mensaje de error
-        return res.status(404).send('Ningun juego encontrado')
-      }
-      
-      GAMES_FOUND_API = GAMES_FOUND_DB.concat(GAMES_FOUND_API.data.results)
+      GAMES_FOUND_API = GAMES_FOUND_DB.concat(GAMES_FOUND_API)
 
       GAMES_FOUND_API.splice( //Si tengo juegos, la API me trae 20 y solo necesito 15
         GAMES_FOUND_API.length - 5 - GAMES_FOUND_DB.length ,
          5 + GAMES_FOUND_DB.length) 
       GAMES_NEEDED = GAMES_FOUND_API
-
-      GAMES_NEEDED = GAMES_NEEDED.map((game) => { //Mapeo para tener solamente los datos que necesito sobre los videojuegos
-          return {
-              id: game.id,
-              name: game.name,
-              image: game.background_image,
-              genre: game.genres.map((genre) => {
-                return {
-                  id: genre.id,
-                  name: genre.name,
-                };
-              }),
-              platforms: game.platforms.map((plat) => {
-                return {
-                  id: plat.platform.id,
-                  name: plat.platform.name,
-                }
-              })
-          }
-      })
-      res.json(GAMES_NEEDED)
+      return GAMES_NEEDED.length ? res.json(GAMES_NEEDED) : res.status(404).send({msg: "No hay juegos que correspondan a esa busqueda"})
   }
 });
 
 router.get('/:idVideogame', async (req, res) => {
+  try {
+    
+  } catch (error) {
+    
+  }
     const {idVideogame} = req.params
     let GAME_SEARCH_FOUND, GAME_SEARCH
 
-    if (typeof idVideogame === 'string' && idVideogame.length > 10) {
+    if (idVideogame.length > 10) {
       const DB_GAME = await Videogame.findOne({
         where: {
           id: idVideogame
         },
-        attributes: ['id', 'name', 'description', 'release_date', 'rating', 'rating_title', 'platforms'],
+        attributes: ['id', 'name', 'image', 'aditional_image', 'description', 'release_date', 'rating', 'platforms'],
         include: [{
           model: Genre,
           attributes: ['id', 'name'],
@@ -142,25 +147,21 @@ router.get('/:idVideogame', async (req, res) => {
           }
         }]
       })
-      return res.json(DB_GAME)
+      return DB_GAME ? res.json(DB_GAME) : res.status(404).send({msg: "Juego no encontrado"})
     }
     
     GAME_SEARCH = await axios.get(`https://api.rawg.io/api/games/${idVideogame}?key=${API_KEY}`)
 
-    const {id, name, description, released, ratings, platforms, genres} = GAME_SEARCH.data
+    const {id, name, description, released, rating, platforms, genres, background_image, background_image_additional} = GAME_SEARCH.data
 
     GAME_SEARCH_FOUND = {
         id,
         name,
-        description,
+        image: background_image,
+        aditional_image: background_image_additional,
+        description: description.replace(/<p>/g, "").replace(/<\/p>/g, "").replace(/<br\s*[\/]?>/gi, ""),
         released_date: released,
-        rating: ratings.map((rating) => {
-            return rating ? {
-                id: rating.id,
-                title: rating.title,
-                count: rating.count,
-            } : []
-        }),
+        rating: rating,
         platforms: platforms.map((plat) => {
             return plat ? {
                 id: plat.platform.id,
@@ -179,7 +180,7 @@ router.get('/:idVideogame', async (req, res) => {
 
 router.post('/videogame', async (req, res) => {
 
-  const {name, description, release_date, rating, rating_title, platforms, image, genres} = req.body
+  const {name, description, release_date, rating, platforms, image, aditional_image, genres} = req.body
 
   const [CREATE_VIDEOGAME, created] = await Videogame.findOrCreate({
     where: {
@@ -187,9 +188,9 @@ router.post('/videogame', async (req, res) => {
       description,
       release_date,
       rating,
-      rating_title,
       platforms,
       image,
+      aditional_image,
     }
   })
 

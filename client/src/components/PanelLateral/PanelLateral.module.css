@@ -1,0 +1,26 @@
+.contenedor_general{
+    background-color: var(--primaryColor);
+}
+
+.panel_contenedor{
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    align-items: flex-start;
+    width: 20vw;
+}
+
+.panel_boton{
+    background-color: var(--secondaryColor);
+    border: none;
+    margin: 20px 10px;
+    padding: 5px;
+    color: var(--primaryColor);
+    width: auto;
+}
+
+.contenedor_paginacion{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

@@ -1,0 +1,58 @@
+.nav_container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--secondaryColor);
+}
+
+.nav_container_derecha{
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    width: 66%;
+    font-size: 20px;
+    margin-right: 50px;
+}
+
+.nav_container_izquierda{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 33%;
+}
+
+.navbar_links{
+    text-decoration: none;
+    text-decoration: none;
+    color: var(--primaryColor);
+    font-weight: 600;
+    padding: 13px 20px;
+}
+
+.nav_gamer_icon{
+    width: 35px;
+    height: 20px;
+    margin-left: 20px;
+}
+
+.nav_input{
+    width: 300px;
+    height: 30px;
+    border: none;
+    padding-left: 7px;
+    color: var(--secondaryColor);
+    background-color: var(--primaryColor);
+}
+.nav_input:focus{
+    outline: none;
+    border: none;
+}
+.nav_input::placeholder{
+    color: var(--secondaryColor)
+}
+
+.contenedor_negro{
+    width: 100%;
+    height: 100%;
+    background-color: black;
+}

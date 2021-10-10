@@ -17,6 +17,10 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    aditional_image: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     description: {
       type: DataTypes.TEXT,
       allowNull: false,
@@ -32,12 +36,8 @@ module.exports = (sequelize) => {
         max: 5,
       },
     },
-    rating_title:{
-      type: DataTypes.STRING,
-      allowNull: false
-    },
     platforms: {
-      type: DataTypes.STRING,
+      type: DataTypes.ARRAY(DataTypes.JSON),
       allowNull: false,
     },
     
