@@ -78,3 +78,8 @@
     animation: flicker 1.5s infinite alternate; 
 
 }
+
+.generos_seleccionados{
+    width: 500px;
+    margin-bottom: 20px;
+}

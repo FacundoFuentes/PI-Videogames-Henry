@@ -1,4 +1,4 @@
-import {React, useEffect} from 'react'
+import {React, useEffect, useState} from 'react'
 import estilos from '../CreateVideogame/CreateVideogame.module.css'
 import Platforms from '../Platforms/Platforms'
 import {getAllGenres} from '../../actions/actions'
@@ -6,6 +6,16 @@ import { useSelector, useDispatch } from 'react-redux'
 
 const CreateVideogame = () => {
     
+    const [input, setinput] = useState({
+        name: "",
+        description: "",
+        image: "",
+        release_date: "",
+        rating: 0,
+        genres: [],
+        platforms: []
+    })
+
     useEffect(() => {
         dispatch(getAllGenres())
     }, [])
@@ -13,8 +23,27 @@ const CreateVideogame = () => {
     const dispatch = useDispatch()
     const genres = useSelector(state => state.allGenres)
 
-    function handleOnSubmit(e) {
-        
+    function handleOnSubmit(e){
+        e.preventDefault()
+        console.log(input)
+        fetch("/videogames/videogame", {
+          method: "POST",
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify(input)
+        })
+      }
+
+    function handlePlatChange(platform) {
+        setinput({...input, platforms:[...input.platforms, platform]})
+    }
+    
+    function handleOnChange(e) {
+        if (e.target.id === 'genres') {
+            console.log(e.target.selectedOptions)
+            let genre = document.querySelector('#generosSeleccionados')
+            genre.innerHTML += `${e.target.selectedOptions[0].innerText}, `
+            setinput({...input, genres: [...input.genres, Number(e.target.selectedOptions[0].id)]})
+        } else setinput({...input ,[e.target.id]: e.target.value})
     }
 
     return (
@@ -25,21 +54,25 @@ const CreateVideogame = () => {
             </div>
             <div className={estilos.contenedor_derecha}>
             <form className={estilos.formulario_derecha} onSubmit={(e) => handleOnSubmit(e)}>
-                <input placeholder='Nombre' type="text" />
-                <input placeholder='Descripción' type="text" />
-                <input placeholder='Imagen' type="text"/>
-                <input type="date" min="1952-01-01" max="2050-12-31" placeholder='Fecha de lanzamiento'/>
-                <input placeholder='Rating' min="1" max="5" type="number" />
+                <input id='name' value={input.name} placeholder='Nombre' type="text" onChange={(e) => handleOnChange(e)} />
+                <input id='description' value={input.desc} placeholder='Descripción' type="text" onChange={(e) => handleOnChange(e)} />
+                <input id='image'  value={input.img} placeholder='Imagen' type="text" onChange={(e) => handleOnChange(e)}/>
+                <input id='release_date' value={input.date} type="date" min="1952-01-01" max="2050-12-31" placeholder='Fecha de lanzamiento' onChange={(e) => handleOnChange(e)}/>
+                <input id='rating' value={input.rating} placeholder='Rating' min="1" max="5" type="number" onChange={(e) => handleOnChange(e)} />
                 <label>Géneros</label>
-                <select id='genrefilter' className={estilos.panel_boton}>
+                <select id='genres' className={estilos.panel_boton} onChange={(e) => handleOnChange(e)}>
+                <option disabled selected>Géneros</option>
                 {genres[0] ? genres.map(g => {
                     return(
-                        <option>{g.name}</option>
+                        <option id={g.id}>{g.name}</option>
                     )
                 }) : <option>Loading...</option> }
             </select>
+            <div className={estilos.generos_seleccionados}>
+                <p id='generosSeleccionados'>Géneros seleccionados: </p>
+            </div>
                 <label>Plataformas</label>
-                <Platforms/>
+                <Platforms setPlatforms={handlePlatChange}/>
                 <div className={estilos.boton_form}>
                 <button>Crear Juego</button>
                 </div>

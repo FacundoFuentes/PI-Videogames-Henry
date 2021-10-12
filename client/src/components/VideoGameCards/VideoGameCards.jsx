@@ -22,7 +22,7 @@ const VideoGameCards = () => {
     const dispatch = useDispatch()
 
     return (
-        pageGames[0] ? 
+        pageGames[0] ? pageGames[0].msg !== 'error' ? 
         <div className={estilos.videogame_cards_container}>
             {pageGames.map(game => {
                 return (
@@ -46,7 +46,7 @@ const VideoGameCards = () => {
                     </div>
                 )
             })}
-        </div> : <LoadingPage/>
+        </div> : <h1>No hay videojuegos para mostrar :(</h1> : <LoadingPage/>
     )
 }
 

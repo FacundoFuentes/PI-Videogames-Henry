@@ -19,13 +19,12 @@ module.exports = (sequelize) => {
     },
     aditional_image: {
       type: DataTypes.STRING,
-      allowNull: false,
     },
     description: {
       type: DataTypes.TEXT,
       allowNull: false,
     },
-    release_date: {
+    released_date: {
       type: DataTypes.STRING,
       
     },

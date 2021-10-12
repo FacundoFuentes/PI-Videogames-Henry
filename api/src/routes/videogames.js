@@ -64,11 +64,10 @@ router.get("/", async (req, res) => {
     res.json(ALL_GAMES);
 
   } else {
-    console.log("Entro al else")
       let GAMES_FOUND_API, GAMES_FOUND_DB, GAMES_NEEDED //Variables que voy a necesitar para obtener los juegos
 
       GAMES_FOUND_DB = await Videogame.findAll({
-        attributes: ['id', 'name', 'image', 'platforms'],
+        attributes: ['id', 'name', 'image', 'rating', 'platforms'],
         where: {
           name: {
             [Op.like]:  `%${name}%`
@@ -89,6 +88,7 @@ router.get("/", async (req, res) => {
           id: dbGame.dataValues.id,
           name: dbGame.dataValues.name,
           image: dbGame.dataValues.image,
+          rating: dbGame.dataValues.rating,
           platforms: dbGame.dataValues.platforms,
           genres: dbGame.dataValues.genres
         }
@@ -99,6 +99,7 @@ router.get("/", async (req, res) => {
         return {
           id: apiGame.id,
           name: apiGame.name,
+          rating: apiGame.rating,
           image: apiGame.background_image,
           platforms: apiGame.platforms.map((plat) => {
             return{
@@ -120,16 +121,11 @@ router.get("/", async (req, res) => {
         GAMES_FOUND_API.length - 5 - GAMES_FOUND_DB.length ,
          5 + GAMES_FOUND_DB.length) 
       GAMES_NEEDED = GAMES_FOUND_API
-      return GAMES_NEEDED.length ? res.json(GAMES_NEEDED) : res.status(404).send({msg: "No hay juegos que correspondan a esa busqueda"})
+      return GAMES_NEEDED.length ? res.json(GAMES_NEEDED) : res.status(404).send([{msg: "error"}])
   }
 });
 
 router.get('/:idVideogame', async (req, res) => {
-  try {
-    
-  } catch (error) {
-    
-  }
     const {idVideogame} = req.params
     let GAME_SEARCH_FOUND, GAME_SEARCH
 
@@ -138,7 +134,7 @@ router.get('/:idVideogame', async (req, res) => {
         where: {
           id: idVideogame
         },
-        attributes: ['id', 'name', 'image', 'aditional_image', 'description', 'release_date', 'rating', 'platforms'],
+        attributes: ['id', 'name', 'image', 'aditional_image', 'description', 'released_date', 'rating', 'platforms'],
         include: [{
           model: Genre,
           attributes: ['id', 'name'],
@@ -180,18 +176,16 @@ router.get('/:idVideogame', async (req, res) => {
 
 router.post('/videogame', async (req, res) => {
 
-  const {name, description, release_date, rating, platforms, image, aditional_image, genres} = req.body
-
-  const [CREATE_VIDEOGAME, created] = await Videogame.findOrCreate({
-    where: {
+  let {name, description, release_date, rating, platforms, image, genres} = req.body
+  // platforms = JSON.stringify(platforms)
+  const CREATE_VIDEOGAME = await Videogame.create({
       name,
       description,
-      release_date,
+      released_date: release_date,
       rating,
       platforms,
       image,
-      aditional_image,
-    }
+      aditional_image: image,
   })
 
   CREATE_VIDEOGAME.addGenres(genres)

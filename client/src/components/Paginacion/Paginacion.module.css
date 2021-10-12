@@ -29,3 +29,7 @@
 .arrow:hover {
     color: var(--secondaryColor);
 }
+
+.none {
+    display: none;
+}

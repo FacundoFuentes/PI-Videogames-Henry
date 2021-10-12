@@ -1,0 +1,36 @@
+.contenedor_details_top{
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 30px;
+
+}
+
+.imagen_de_fondo{
+    width: 500px;
+    height: 500px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 1px solid var(--secondaryColor);
+}
+
+.contenedor_nombre{
+    width: 50%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.contenedor_nombre p{
+    font-size: 90px;
+}
+
+.contenedor_abajo{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    margin-top: 40px;
+    gap: 40px;
+}

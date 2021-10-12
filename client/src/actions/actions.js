@@ -6,6 +6,14 @@ export function getAllGames() {
     }
 }
 
+export function getAllGenres() {
+  return async function (dispatch) {
+    let genres = await fetch('/genres')
+    genres = await genres.json()
+    dispatch({type: "GET_ALL_GENRES", payload: genres})
+  }
+}
+
 export function getGameDetails(id) {
   return async function(dispatch) {
     let game = await fetch(`/videogames/${id}`)
@@ -26,10 +34,30 @@ export function filterByGenre(type) {
   return {type: "FILTER_BY_GENRE", payload: type}
 }
 
-export function getAllGenres() {
-  return async function (dispatch) {
-    let genres = await fetch('/genres')
-    genres = await genres.json()
-    dispatch({type: "GET_ALL_GENRES", payload: genres})
+export function filterBDorAPI(type) {
+  return {type: "FILTER_BD_API", payload: type}
+}
+
+export function orderAZ(boolean) {
+  return {type: "FILTER_AZ", payload: boolean}
+}
+
+export function orderRating(boolean) {
+  return {type: "FILTER_RATING", payload: boolean}
+}
+
+export function resetFilters() {
+  return {type: "RESET_FILTERS"}
+}
+
+export function searchGame(game) {
+  return async function(dispatch) {
+    let gameSearch = await fetch(`/videogames/?name=${game}`)
+    gameSearch = await gameSearch.json()
+    dispatch({type: "SEARCH_GAME", payload: gameSearch})
   }
+}
+
+export function userSearch(bool) {
+  return {type: "USER_SEARCH", payload: bool}
 }

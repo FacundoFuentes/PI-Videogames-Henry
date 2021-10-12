@@ -6,6 +6,7 @@ import { GamesOnPageChange } from '../../actions/actions'
 const Paginacion = () => {
     
     const dispatch = useDispatch()
+    const search = useSelector(state => state.search)
     const pageNumber = useSelector(state => state.pageNumber)
     
     function handleOnClick(e) {
@@ -25,7 +26,7 @@ const Paginacion = () => {
     }
 
     return (
-        <div className={estilos.contenedor_paginacion}>
+        <div className={search ? estilos.contenedor_paginacion : estilos.none}>
             <span id='-1' className={estilos.arrow} onClick={(e) => handleOnClick(e)}>«</span>
             <span id='1' onClick={(e) => handleOnClick(e)}>1</span>
             <span id='2' onClick={(e) => handleOnClick(e)}>2</span>

@@ -6,6 +6,10 @@
     font-family: 'Roboto Mono', monospace;
 }
 
+body {
+    background-color: RGB(198, 90 , 124);
+}
+
 :root{
     --primaryColor: RGB(198, 90 , 124);
     --secondaryColor: RGB(64, 25 , 53);

@@ -1,10 +1,25 @@
-import React from 'react'
-import {useSelector} from 'react-redux'
+import {React, useState} from 'react'
+import {useSelector, useDispatch} from 'react-redux'
 import {NavLink} from 'react-router-dom'
 import estilos from '../NavBar/NavBar.module.css'
 import GamerIcon from '../../media/images/GamerIconPNG.png'
+import { searchGame, userSearch } from '../../actions/actions'
 
 const NavBar = () => {
+    const dispatch = useDispatch()
+    const [input, setInput] = useState("")
+    
+    function handleOnChange(e) {
+        setInput(e.target.value)
+    }
+
+    function handleOnSubmit(e) {
+        e.preventDefault()
+        dispatch(userSearch(false))
+        dispatch(searchGame(input))
+        setInput("")
+
+    }
 
     const pageGames = useSelector(state => state.actualPageGames)
     return (
@@ -29,7 +44,9 @@ const NavBar = () => {
                     <NavLink className={estilos.navbar_links} to='/contact'>
                         CONTACT
                     </NavLink>
-                    <input placeholder='Busca un juego :)' className={estilos.nav_input} type="text" />
+                    <form onSubmit={(e) => handleOnSubmit(e)}>
+                    <input value={input} onSubmit={(e) => handleOnSubmit(e)} placeholder='Busca un juego :)' className={estilos.nav_input} type="text" onChange={(e) => handleOnChange(e)} />
+                    </form>
                 </div>
             </div>
         </nav> : <div className={estilos.contenedor_negro}></div>

@@ -1,7 +1,7 @@
 import {React, useState, useEffect} from 'react'
 import Paginacion from '../Paginacion/Paginacion'
 import { useSelector, useDispatch } from 'react-redux'
-import { getAllGenres, filterByGenre } from '../../actions/actions'
+import { getAllGenres, filterByGenre, filterBDorAPI, orderAZ, orderRating, resetFilters, userSearch } from '../../actions/actions'
 import estilos from '../PanelLateral/PanelLateral.module.css'
 
 const PanelLateral = () => {
@@ -9,11 +9,12 @@ const PanelLateral = () => {
     const [booleanAZ, setBooleanAZ] = useState(true)
     const [rating, setrating] = useState(true)
 
+    const dispatch = useDispatch()
+
     useEffect(() => {
         dispatch(getAllGenres())
     }, [])
 
-    const dispatch = useDispatch()
 
     const genres = useSelector(state => state.allGenres)
 
@@ -23,17 +24,25 @@ const PanelLateral = () => {
             case 'azfilter':
                 booleanAZ ? e.target.innerHTML = 'Filtrado Z-A' : e.target.innerHTML = 'Filtrado A-Z'
                 setBooleanAZ(!booleanAZ)
+                dispatch(orderAZ(booleanAZ))
                 break;
             case 'ratingfilter':
                 rating ? e.target.innerHTML = 'Rating 5-1' : e.target.innerHTML = 'Rating 1-5'
                 setrating(!rating)
+                dispatch(orderRating(rating))
                 break;
             case 'genrefilter':
-                console.log('Entré al case de GENRE')
                 dispatch(filterByGenre(e.target.value))
                 break;
-
-
+            case 'bdfilter':
+                dispatch(filterBDorAPI('BD'))
+                break;
+            case 'apifilter':
+                dispatch(filterBDorAPI('API'))
+                break;
+            case 'resetfilters':
+                dispatch(userSearch(true))
+                dispatch(resetFilters())
             default:
                 break;
         }
@@ -53,6 +62,7 @@ const PanelLateral = () => {
             </select>
             <button id='bdfilter' className={estilos.panel_boton} onClick={(e) => handleOnClick(e)}>Juegos de la BD</button>
             <button id='apifilter' className={estilos.panel_boton} onClick={(e) => handleOnClick(e)}>Juegos de la API</button>
+            <button id='resetfilters' className={estilos.panel_boton} onClick={(e) => handleOnClick(e)}>Reiniciar Filtros</button>
         </div>
         <div className={estilos.contenedor_paginacion}>
             <Paginacion/>
