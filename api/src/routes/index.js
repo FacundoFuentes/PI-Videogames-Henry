@@ -17,8 +17,8 @@ const router = Router();
             name: genre.name
         }
     })
-    console.log(GENRES_NAME)
     Genre.bulkCreate(GENRES_NAME)
+    console.log('Generos cargados correctamente')
 })()
 
 // Configurar los routers

@@ -6,7 +6,6 @@ const { API_KEY } = process.env;
 
 router.get('/', async (req, res) => {
     const GENRES = await Genre.findAll({})
-    console.log(GENRES)
     res.json(GENRES)
 })
 

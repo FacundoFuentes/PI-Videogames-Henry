@@ -15,11 +15,12 @@
 
 .contenedor_nombre{
     width: 50%;
+    flex-direction: column;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    align-items: center;
-
+    align-items: flex-start;
+    gap: 80px;
 }
 
 .contenedor_nombre p{

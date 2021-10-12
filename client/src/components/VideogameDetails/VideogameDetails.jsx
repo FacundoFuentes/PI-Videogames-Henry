@@ -4,8 +4,14 @@ import estilos from "../VideogameDetails/VideogameDetails.module.css";
 import { getGameDetails, clearGameDetails } from "../../actions/actions";
 import { useParams } from "react-router-dom";
 import LoadingPage from "../LoadingPage/LoadingPage";
+import imagenN from '../../media/images/image-not-found.png'
 
 const VideogameDetails = () => {
+
+  function checkURL(url) {
+    if (typeof url !== 'string') return false;
+    return (url.match(/\.(jpg|jpeg|gif|png)$/) != null);
+  }
 
     function renderSwitch(key) {
         key = Math.floor(key)
@@ -31,7 +37,7 @@ const VideogameDetails = () => {
         <div>
           <img
             className={estilos.imagen_de_fondo}
-            src={gameDetails.aditional_image}
+            src={checkURL(gameDetails.aditional_image) ? gameDetails.aditional_image : imagenN }
             alt="Not Found"
           />
         </div>

@@ -1,12 +1,11 @@
 import {React, useEffect, useState} from 'react'
 import estilos from '../CreateVideogame/CreateVideogame.module.css'
 import Platforms from '../Platforms/Platforms'
-import {getAllGenres} from '../../actions/actions'
+import {getAllGames, getAllGenres} from '../../actions/actions'
 import { useSelector, useDispatch } from 'react-redux'
 
 const CreateVideogame = () => {
-    
-    const [input, setinput] = useState({
+    const initialState = {
         name: "",
         description: "",
         image: "",
@@ -14,7 +13,8 @@ const CreateVideogame = () => {
         rating: 0,
         genres: [],
         platforms: []
-    })
+    }
+    const [input, setinput] = useState(initialState)
 
     useEffect(() => {
         dispatch(getAllGenres())
@@ -23,15 +23,17 @@ const CreateVideogame = () => {
     const dispatch = useDispatch()
     const genres = useSelector(state => state.allGenres)
 
-    function handleOnSubmit(e){
+    async function handleOnSubmit(e){
+        alert('Juego creado 🎮')
         e.preventDefault()
-        console.log(input)
-        fetch("/videogames/videogame", {
-          method: "POST",
-          headers: {'Content-Type':'application/json'},
-          body: JSON.stringify(input)
+        await fetch("/videogames/videogame", {
+            method: "POST",
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify(input)
         })
-      }
+        dispatch(getAllGames())
+        
+    }
 
     function handlePlatChange(platform) {
         setinput({...input, platforms:[...input.platforms, platform]})
@@ -39,7 +41,6 @@ const CreateVideogame = () => {
     
     function handleOnChange(e) {
         if (e.target.id === 'genres') {
-            console.log(e.target.selectedOptions)
             let genre = document.querySelector('#generosSeleccionados')
             genre.innerHTML += `${e.target.selectedOptions[0].innerText}, `
             setinput({...input, genres: [...input.genres, Number(e.target.selectedOptions[0].id)]})
@@ -55,9 +56,9 @@ const CreateVideogame = () => {
             <div className={estilos.contenedor_derecha}>
             <form className={estilos.formulario_derecha} onSubmit={(e) => handleOnSubmit(e)}>
                 <input id='name' value={input.name} placeholder='Nombre' type="text" onChange={(e) => handleOnChange(e)} />
-                <input id='description' value={input.desc} placeholder='Descripción' type="text" onChange={(e) => handleOnChange(e)} />
-                <input id='image'  value={input.img} placeholder='Imagen' type="text" onChange={(e) => handleOnChange(e)}/>
-                <input id='release_date' value={input.date} type="date" min="1952-01-01" max="2050-12-31" placeholder='Fecha de lanzamiento' onChange={(e) => handleOnChange(e)}/>
+                <input id='description' value={input.description} placeholder='Descripción' type="text" onChange={(e) => handleOnChange(e)} />
+                <input id='image'  value={input.image} placeholder='Imagen' type="text" onChange={(e) => handleOnChange(e)}/>
+                <input id='release_date' value={input.release_date} type="date" min="1952-01-01" max="2050-12-31" placeholder='Fecha de lanzamiento' onChange={(e) => handleOnChange(e)}/>
                 <input id='rating' value={input.rating} placeholder='Rating' min="1" max="5" type="number" onChange={(e) => handleOnChange(e)} />
                 <label>Géneros</label>
                 <select id='genres' className={estilos.panel_boton} onChange={(e) => handleOnChange(e)}>

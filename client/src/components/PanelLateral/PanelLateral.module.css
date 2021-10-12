@@ -17,6 +17,11 @@
     padding: 5px;
     color: var(--primaryColor);
     width: auto;
+    border: 1px solid var(--secondaryColor);
+}
+.panel_boton:not(select):hover{
+    background-color: var(--primaryColor);
+    color: var(--secondaryColor);
 }
 
 .contenedor_paginacion{
