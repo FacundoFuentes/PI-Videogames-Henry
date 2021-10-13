@@ -13,7 +13,7 @@ const PanelLateral = () => {
 
     useEffect(() => {
         dispatch(getAllGenres())
-    }, [])
+    }, [dispatch])
 
 
     const genres = useSelector(state => state.allGenres)
@@ -43,6 +43,7 @@ const PanelLateral = () => {
             case 'resetfilters':
                 dispatch(userSearch(true))
                 dispatch(resetFilters())
+                break;
             default:
                 break;
         }
@@ -52,11 +53,11 @@ const PanelLateral = () => {
         <div className={estilos.panel_contenedor}>
             <button id='azfilter' className={estilos.panel_boton} onClick={(e) => handleOnClick(e)}>Filtrado A-Z</button>
             <button id='ratingfilter' className={estilos.panel_boton} onClick={(e) => handleOnClick(e)}>Rating 1-5</button>
-            <select id='genrefilter' className={estilos.panel_boton} onChange={(e) => handleOnClick(e)}>
-                <option disabled selected>Género</option>
+            <select value={'default'} id='genrefilter' className={estilos.panel_boton} onChange={(e) => handleOnClick(e)}>
+                <option value='default' disabled>Género</option>
                 {genres[0] ? genres.map(g => {
                     return(
-                        <option>{g.name}</option>
+                        <option key={g.id}>{g.name}</option>
                     )
                 }) : <option>Loading...</option> }
             </select>

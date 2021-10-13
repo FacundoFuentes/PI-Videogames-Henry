@@ -12,19 +12,19 @@ const VideoGameCards = () => {
 
     function checkURL(url) {
         if (typeof url !== 'string') return false;
-        return (url.match(/\.(jpg|jpeg|gif|png)$/) != null);
+        return (url.match(/\.(jpg|jpeg|png)$/) != null);
       }
     function renderSwitch(key) {
         key = Math.floor(key)
         return <h1>{'⭐'.repeat(key)}</h1>
     }
+    const pageGames = useSelector(state => state.actualPageGames)
+    const dispatch = useDispatch()
 
     useEffect(() => {
         if(!pageGames[0]) dispatch(getAllGames())
-    }, [])
+    }, [dispatch, pageGames])
 
-    const pageGames = useSelector(state => state.actualPageGames)
-    const dispatch = useDispatch()
 
     return (
         pageGames[0] ? pageGames[0].msg !== 'error' ? 
@@ -39,7 +39,7 @@ const VideoGameCards = () => {
                         <div className={estilos.videogame_card_text_genre}>
                         {game.genres.map(genre => {
                             return (
-                                <span>{genre.name} </span>
+                                <span key={genre.id}>{genre.name} </span>
                             )
                         })}
                         </div>

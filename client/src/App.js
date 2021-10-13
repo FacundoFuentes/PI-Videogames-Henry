@@ -12,9 +12,9 @@ function App() {
 
   return (
     <>
-      {/* <Route path={expr}> */}
+      <Route path={expr}>
       <NavBar />
-      {/* </Route> */}
+      </Route>
       <Switch>
         <Route exact path="/">
           <Landing />

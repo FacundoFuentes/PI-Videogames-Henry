@@ -15,13 +15,13 @@ const CreateVideogame = () => {
         platforms: []
     }
     const [input, setinput] = useState(initialState)
+    const dispatch = useDispatch()
+    const genres = useSelector(state => state.allGenres)
 
     useEffect(() => {
         dispatch(getAllGenres())
-    }, [])
+    }, [dispatch])
     
-    const dispatch = useDispatch()
-    const genres = useSelector(state => state.allGenres)
 
     async function handleOnSubmit(e){
         alert('Juego creado 🎮')

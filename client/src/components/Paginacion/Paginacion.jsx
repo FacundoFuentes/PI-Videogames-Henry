@@ -1,4 +1,4 @@
-import {React, useEffect} from 'react'
+import {React} from 'react'
 import estilos from '../Paginacion/Paginacion.module.css'
 import {useSelector, useDispatch} from 'react-redux'
 import { GamesOnPageChange } from '../../actions/actions'

@@ -57,7 +57,7 @@ export default function rootReducer(state = initialState, action)  {
                 pageNumber: 1
             }
         case "FILTER_AZ":
-            let orderedAZ = orderAZ(state.allGamesCopy, action.payload)
+            let orderedAZ = orderAZ([...state.allGamesCopy], action.payload)
             return {
                 ...state,
                 allGamesCopy: orderedAZ,
@@ -65,7 +65,7 @@ export default function rootReducer(state = initialState, action)  {
                 pageNumber: 1
             }
         case "FILTER_RATING":
-            let orderedR = orderRating(state.allGamesCopy, action.payload)
+            let orderedR = orderRating([...state.allGamesCopy], action.payload)
             return{
                 ...state,
                 allGamesCopy: orderedR,

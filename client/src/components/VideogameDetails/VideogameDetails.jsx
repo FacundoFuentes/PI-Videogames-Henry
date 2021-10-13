@@ -25,7 +25,7 @@ const VideogameDetails = () => {
   useEffect(() => {
     dispatch(clearGameDetails());
     dispatch(getGameDetails(id));
-  }, []);
+  }, [dispatch, id]);
 
   return gameDetails.name ? (
     <div>
@@ -57,7 +57,7 @@ const VideogameDetails = () => {
           <h1>Plataformas:{" "}</h1>
           {gameDetails.platforms.map((plat) => {
             return (
-              <div>
+              <div key={plat.name}>
                 <p>{plat.name}</p>
               </div>
             );
@@ -67,7 +67,7 @@ const VideogameDetails = () => {
           <h1>Generos:{" "}</h1>
           {gameDetails.genres.map((genre) => {
             return (
-              <div>
+              <div key={genre.name}>
                 <p>{genre.name}</p>
               </div>
             );
