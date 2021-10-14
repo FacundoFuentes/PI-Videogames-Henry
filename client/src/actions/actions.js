@@ -16,7 +16,7 @@ export function getAllGenres() {
 
 export function getGameDetails(id) {
   return async function(dispatch) {
-    let game = await fetch(`/videogames/${id}`)
+    let game = await fetch(`/videogames/details/${id}`)
     game = await game.json()
     dispatch({type: "GAME_DETAIL", payload: game})
   }

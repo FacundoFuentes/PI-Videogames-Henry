@@ -41,7 +41,7 @@ export default function rootReducer(state = initialState, action)  {
                 pageNumber: action.payload
             }
         case "FILTER_BY_GENRE":
-            let orderedGenre = GenreFilter(state.allGames, action.payload)
+            let orderedGenre = GenreFilter(state.allGamesCopy, action.payload)
             return {
                 ...state,
                 allGamesCopy: orderedGenre,

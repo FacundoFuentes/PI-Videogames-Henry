@@ -125,7 +125,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get('/:idVideogame', async (req, res) => {
+router.get('/details/:idVideogame', async (req, res) => {
     const {idVideogame} = req.params
     let GAME_SEARCH_FOUND, GAME_SEARCH
 
